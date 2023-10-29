@@ -19,8 +19,7 @@ mca-pack: httpd-arm64
 
 requirements.txt:
 	git clone https://github.com/ithewei/libhv.git
-	cd libhv
-	./configure
-	make
-	make install
-	touch ../requirements.txt
+	cd libhv ; ./configure
+	cd libhv ; make
+	cd libhv ; make install
+	touch requirements.txt
