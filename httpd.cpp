@@ -4,6 +4,7 @@ using namespace hv;
 #include <chrono>      //chrono C++20
 #include <string_view>
 #include <pqxx/pqxx>   //postgres libpqxx C++
+//#include <pqxx/strconv>
 
 int main() {
   HttpService router;
@@ -38,11 +39,10 @@ int main() {
     pqxx::transaction tx{ conn };
     try
     {
-
-      pqxx::result rows{ tx.exec("SELECT 'rows' as k, count(*) c FROM telemetry") };
-      for (auto row : rows) {
-        resp->json["rows"] = row[1].as<long>();
-      }
+      //pqxx::result rows{ tx.exec("SELECT 'rows' as k, count(*) c FROM telemetry") };
+      //for (auto row : rows) {
+      //  resp->json["rows"] = row[1].as<long>();
+      //}
       //for (auto const& [k, c] : tx.query("SELECT 'rows' as k, count(*) c FROM telemetry")) {
       //  resp->json["rows"] = c;
       //}
