@@ -9,13 +9,14 @@ test: httpd
 httpd-arm64: httpd.cpp
 	apt install -y g++-12-aarch64-linux-gnu gcc-12-aarch64-linux-gnu
 	apt install -y libpqxx-dev:arm64
-	aarch64-linux-gnu-g++-12 $^ -O3 -I/usr/include/ -I/usr/local/include/ -L/usr/lib/aarch64-linux-gnu/ -std=c++20 -lpqxx -lhv -o $@
+	cd libhv ; rm -fr build_arm64 ; mkdir build_arm64 ; cd build_arm64 ; cmake .. -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc-12 -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++-12 && cmake --build . --target libhv libhv_static
+	aarch64-linux-gnu-g++-12 $^ -static -O3 -I/usr/include/ -I/usr/local/include/ -L/usr/lib/aarch64-linux-gnu/ -L~/httpd/libhv/build_arm64/lib/ -std=c++20 -lpqxx -lhv_static -o $@
 
 mca-pack: httpd-arm64
 	rm -f httpd-arm64.zip
-	cp /usr/lib/aarch64-linux-gnu/libpqxx-6.4.so .
-	zip httpd-arm64.zip libpqxx-6.4.so httpd-arm64
-	rm -f libpqxx-6.4.so
+	zip httpd-arm64.zip httpd-arm64
+
+#sample
 
 requirements.txt:
 	git clone https://github.com/ithewei/libhv.git
@@ -23,3 +24,6 @@ requirements.txt:
 	cd libhv ; make
 	cd libhv ; make install
 	touch requirements.txt
+
+libhv-arm64:
+	cd libhv ; rm -fr build_arm64 ; mkdir build_arm64 ; cd build_arm64 ; cmake .. -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc-12 -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++-12 && cmake --build . --target libhv libhv_static
