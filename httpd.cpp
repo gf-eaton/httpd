@@ -1,7 +1,9 @@
 ﻿#include "hv/HttpServer.h"
 using namespace hv;
-#include <chrono>   //chrono C++20
-#include <pqxx/pqxx> //postgres libpqxx C++
+#include <chrono>      //chrono C++20
+#include <pqxx/pqxx>   //postgres libpqxx C++
+#include <iostream>    //cout
+#include <string_view>
 
 int main() {
   HttpService router;
