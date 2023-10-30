@@ -9,7 +9,7 @@ test: httpd
 httpd-arm64: httpd.cpp
 	apt install -y g++-12-aarch64-linux-gnu gcc-12-aarch64-linux-gnu
 	apt install -y libpqxx-dev:arm64
-	cd libhv ; rm -fr build_arm64 ; mkdir build_arm64 ; cd build_arm64 ; cmake .. -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc-12 -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++-12 && cmake -j 4 --build . --target libhv libhv_static
+	cd libhv ; rm -fr build_arm64 ; mkdir build_arm64 ; cd build_arm64 ; cmake .. -DCMAKE_C_COMPILER=aarch64-linux-gnu-gcc-12 -DCMAKE_CXX_COMPILER=aarch64-linux-gnu-g++-12 && cmake --build . --target libhv libhv_static
 	aarch64-linux-gnu-g++-12 $^ -static -O3 -I/usr/include/ -I/usr/local/include/ -L/usr/lib/aarch64-linux-gnu/ -L/root/httpd/libhv/build_arm64/lib/ -std=c++20 -lpqxx -lhv_static -o $@
 
 httpd-pack: httpd-arm64

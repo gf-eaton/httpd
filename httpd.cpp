@@ -35,14 +35,14 @@ int main() {
 
   router.GET("/api", [](HttpRequest* req, HttpResponse* resp) {
     auto start = std::chrono::steady_clock::now();
-    //pqxx::connection conn("user=pxmcea host=166.99.230.91 password=Security*8 dbname=telemetry");
-    //pqxx::transaction tx{ conn };
+    pqxx::connection conn("user=pxmcea host=166.99.230.91 password=Security*8 dbname=telemetry");
+    pqxx::transaction tx{ conn };
     try
     {
-      //pqxx::result rows{ tx.exec("SELECT 'rows' as k, count(*) c FROM telemetry") };
-      //for (auto row : rows) {
-      //  resp->json["rows"] = row[1].as<long>();
-      //}
+      pqxx::result rows{ tx.exec("SELECT 'rows' as k, count(*) c FROM telemetry") };
+      for (auto row : rows) {
+        resp->json["rows"] = row[1].as<long>();
+      }
       //for (auto const& [k, c] : tx.query("SELECT 'rows' as k, count(*) c FROM telemetry")) {
       //  resp->json["rows"] = c;
       //}
