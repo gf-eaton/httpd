@@ -1,9 +1,9 @@
 httpd: httpd.cpp
 	apt install -y libpqxx-dev
-	g++ $^ -O3 -I/usr/include/ -I/usr/local/include/ -std=c++20 -lpqxx -lpq -o $@
+	g++ $^ -O3 -I/usr/include/ -std=c++20 -lpqxx -o $@
 
 test: httpd
-	/usr/bin/time -f"Executed:%es\nRAM:%MKb\nSystem:%Ss" ./mca --runfor 00:01 --id 1 --assetid 1 --config ./config-mca.json
+	/usr/bin/time -f"Executed:%es\nRAM:%MKb\nSystem:%Ss" ./httpd --runfor 00:01 --config ./config-httpd.json
 	/usr/bin/time -f"Executed:%es\nRAM:%MKb\nSystem:%Ss" ./mca --runfor 0000000
 
 httpd-arm64: httpd.cpp
