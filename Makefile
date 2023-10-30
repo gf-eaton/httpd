@@ -1,6 +1,6 @@
 httpd: httpd.cpp
 	apt install -y libpqxx-dev
-	g++ $^ -O3 -I/usr/include/ -std=c++20 -lpqxx -o $@
+	g++ $^ -O3 -I/usr/include/ -I/usr/local/include/ -std=c++20 -lpqxx -lpq -o $@
 
 test: httpd
 	/usr/bin/time -f"Executed:%es\nRAM:%MKb\nSystem:%Ss" ./mca --runfor 00:01 --id 1 --assetid 1 --config ./config-mca.json
@@ -9,7 +9,7 @@ test: httpd
 httpd-arm64: httpd.cpp
 	apt install -y g++-12-aarch64-linux-gnu gcc-12-aarch64-linux-gnu
 	apt install -y libpqxx-dev:arm64
-	aarch64-linux-gnu-g++-12 $^ -O3 -I/usr/include/modbus/ -I/usr/include/ -L/usr/lib/aarch64-linux-gnu/ -std=c++20 -lpqxx -o $@
+	aarch64-linux-gnu-g++-12 $^ -O3 -I/usr/include/ -I/usr/local/include/ -L/usr/lib/aarch64-linux-gnu/ -std=c++20 -lpqxx -o $@
 
 mca-pack: httpd-arm64
 	rm -f httpd-arm64.zip

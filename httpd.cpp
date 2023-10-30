@@ -1,8 +1,8 @@
 ﻿#include "hv/HttpServer.h"
 using namespace hv;
+#include <iostream>    //cout
 #include <chrono>      //chrono C++20
 #include <pqxx/pqxx>   //postgres libpqxx C++
-#include <iostream>    //cout
 #include <string_view>
 
 int main() {
@@ -38,11 +38,19 @@ int main() {
     {
       pqxx::connection conn("user=pxmcea host=166.99.230.91 password=Security*8 dbname=telemetry");
       pqxx::transaction tx{ conn };
-      for (auto const& [k, c] : tx.stream<std::string_view, long>("SELECT 'count', count(*) c FROM telemetry"))
-      {
-        //std::cout << att << ": " << count << '\n';
-        resp->json["count"] = c;
+      pqxx::result rows{ tx.exec("SELECT 'rows' as k, count(*) c FROM telemetry") };
+      for (auto row : rows) {
+        resp->json["rows"] = row[1].as<long>();
       }
+      //for (auto const& [k, c] : tx.query("SELECT 'rows' as k, count(*) c FROM telemetry")) {
+      //  resp->json["rows"] = c;
+      //}
+
+      //for (auto const& [k, c] : tx.stream<std::string_view, long>("SELECT 'count' as k, count(*) c FROM telemetry"))
+      //{
+      //  //std::cout << att << ": " << count << '\n';
+      //  resp->json["count"] = c;
+      //}
       conn.close();
     }
     catch (std::exception const& e)
