@@ -51,13 +51,14 @@ int main() {
       //  //std::cout << att << ": " << count << '\n';
       //  resp->json["count"] = c;
       //}
-      conn.close();
+
     }
     catch (std::exception const& e)
     {
       std::cerr << "ERROR: " << e.what() << '\n';
       return 400;
     }
+    conn.close();
     resp->json["origin"] = req->client_addr.ip;
     resp->json["url"] = req->url;
     resp->json["args"] = req->query_params;
