@@ -4,3 +4,6 @@ libhv/
 tmp/
 requirements.txt
 hconfig.h
+httpd
+httpd-arm64
+httpd-static
