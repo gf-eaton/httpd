@@ -5,11 +5,26 @@
 #include <string>      //std::string
 
 #include "hv/HttpServer.h"
-//#include "hv/hv.h"     //get_ncpu
+#include "hv/hv.h"     //get_ncpu
 //#include "hv/json.hpp"
 using namespace hv;
 
-int main() {
+int main(int argc, char* argv[]) {
+  uint16_t i = 1, k = 0, id = 0, assetid = 0, postgres = 0;
+  char hhmm[6] = "00:02";
+  char f[128] = "../../../config-httpd.json";
+  char ip[16] = "0.0.0.0";
+  int port = 0;
+
+  while (i < argc) {
+    if (strcmp(argv[i], "--runfor") == 0) { ++i; if (strlen(argv[i]) != 5) break; else { if (strlen(argv[i]) < sizeof(hhmm)) { strcpy(hhmm, argv[i]); k++; } } }
+    if (strcmp(argv[i], "--port") == 0) { ++i; port = atoi(argv[i]); k++; }
+    if (strcmp(argv[i], "--ip") == 0) { ++i; if (strlen(argv[i]) < sizeof(ip)) { strcpy(ip, argv[i]); k++; } }
+    if (strcmp(argv[i], "--config") == 0) { ++i; if (strlen(argv[i]) < sizeof(f)) { strcpy(f, argv[i]); k++; } }
+    ++i;
+  }
+  if ((argc - 1) / 2 != k || k == 0) { std::cout << "httpd - by Guy Francoeur (c) 2023\nUsage : " << argv[0] << "\n\t{--runfor 00:30}\n\t{--ip 0.0.0.0}\n\t{--port 502}\n\t{--config ./file.json}\n--runfor\tHourMinute the application will be running. It stops after HH:MM human time;\n--id    \tThe configuration ID to use;\n--assetid \tThe asset ID to use;\n--config\tThe json configuration file to use;\n\n"; return 0; }
+
   HttpService router;
   router.GET("/ping", [](HttpRequest* req, HttpResponse* resp) {
     return resp->String("pong");
@@ -59,6 +74,7 @@ int main() {
     resp->json["headers"] = req->headers;
     auto t0 = std::chrono::steady_clock::now() - start;
     resp->json["ztimer_ms"] = std::chrono::duration_cast<std::chrono::milliseconds>(t0).count();
+    std::cout << "/api\t" << "in " << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start).count() << "ms\n";
     return 200;
     });
 
@@ -102,14 +118,16 @@ int main() {
     auto t1 = std::chrono::steady_clock::now() - start;
     resp->json["zquery_ms"] = std::chrono::duration_cast<std::chrono::milliseconds>(t0).count();
     resp->json["zparser_ms"] = std::chrono::duration_cast<std::chrono::milliseconds>(t1).count() - std::chrono::duration_cast<std::chrono::milliseconds>(t0).count();
+    std::cout << "/live\t" << "in " << std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start).count() << "ms\n";
     return 200;
     });
 
   HttpServer server = HttpServer();
   server.registerHttpService(&router);
-  server.setPort(8080);
-  server.setHost("127.0.0.1");
-  server.setThreadNum(4); //get_ncpu()
+  server.setPort(port);
+  server.setHost(ip);
+  server.setThreadNum(get_ncpu()); //get_ncpu()
+  std::cout << "listening on " << ip << ":" << port << " (" << get_ncpu() << ")\n";
   server.run();
   return 0;
 }
