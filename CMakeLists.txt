@@ -14,9 +14,9 @@ if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET httpd PROPERTY CXX_STANDARD 20)
 endif()
 
-set_property(TARGET httpd PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>") #set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-target_compile_options(httpd PRIVATE /MTd) #/MT release
-target_link_options(httpd PRIVATE /INCREMENTAL:NO /NODEFAULTLIB:MSVCRT)
+#set_property(TARGET httpd PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>") #set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+#target_compile_options(httpd PRIVATE /MTd) #/MT release
+#target_link_options(httpd PRIVATE /INCREMENTAL:NO /NODEFAULTLIB:MSVCRT)
 
 find_package(libhv REQUIRED)
 find_package(libpqxx REQUIRED)
